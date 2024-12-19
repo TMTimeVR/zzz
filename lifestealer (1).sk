@@ -1,0 +1,110 @@
+on load:
+	set {LifeStealer} to netherite sword named "&dLife Stealer" with lore " " and "&6Item Ability: Life Drain" and "&7Regain &c0.5❤ hearts &7when hitting" and "&7a mob or player" and " " and "&6Item Ability: Blood Alchemy" and "&7For each player killed, gain" and "&71 level of &cStrength &7and &fSpeed&7," and "&7plus &e2 ❤ Absorption Hearts &7for 1m" and " " and "&d&lMYTHIC" with custom model data 1
+
+	register new shaped recipe for {LifeStealer} using enchanted golden apple, nether star, enchanted golden apple, golden apple, netherite sword, golden apple, breeze rod, breeze rod, and breeze rod with id "LifeStealerCraft"
+
+
+command /kingssmp:host [<text>] [<text>]:
+	permission: op
+	trigger:
+		if arg 1 is "LifeStealer":
+			if arg 2 is "Start":
+				set {LifeCraft} to 0
+				send "&6Started the crafting recipe for &4LifeStealer" to all players
+			if arg 2 is "Stop":
+				set {LifeCraft} to 1
+				send "&6Stoped the crafting recipe for &4LifeStealer" to all players
+
+on tab complete of "/kingssmp:host":
+	add "LifeStealer" to tab completions
+	add "Start" to tab completions
+	add "Stop" to tab completions
+
+command /crafttest:
+	permission: op
+	trigger:
+		if {LifeCraft} = 1:
+			send "1" to player
+		if {LifeCraft} = 0:
+			send "0" to player
+
+on craft:
+	if event-item = {LifeStealer}:
+		if {LifeCraft} >= 1:
+			cancel event
+		else:
+			add 1 to {LifeCraft}
+			
+command /kings:lifelimit:
+	trigger:
+		set {LifeCraft} to 0
+
+
+command /kingssmp:items [<text>] [<player>]:
+	permission: op
+	trigger:
+		if arg 1 is "LifeStealer":
+			if arg 2 is set:
+				give player {LifeStealer}
+			else:
+				give player {LifeStealer}
+				
+on tab complete of "/kingssmp:items":
+	add "LifeStealer" to tab completions
+
+
+on item damage:
+	if event-item is {LifeStealer}:
+		cancel event
+
+on item despawn:
+	if event-item is {LifeStealer}:
+		cancel event
+		
+on right click on armor stand:
+	if event-item is {LifeStealer}:
+		cancel event
+
+
+on damage:
+	if attacker is a player:
+		if attacker's held item is {LifeStealer}:
+			if victim is blocking:
+				stop
+			else:
+				heal attacker by 0.5 hearts
+
+
+on inventory click:
+	if name of player's inventory is "Ender Chest":
+		if lore of clicked slot contains "&d&lMYTHIC":
+			cancel event
+			send "&cYou can't place Mythic Items in your Ender Chest!" to player
+
+		if click type is number key:
+			if lore of slot hotbar button of player's inventory contains "&d&lMYTHIC":
+				cancel event
+				send "&cYou can't place Mythic Items in your Ender Chest!" to player
+				close player's inventory
+
+	if name of player's inventory is "Repair & Disenchant":
+		if lore of clicked slot contains "&d&lMYTHIC":
+			cancel event
+			send "&cYou can't put this into a grindstone!" to player
+
+		if click type is number key:
+			if lore of slot hotbar button of player's inventory contains "&d&lMYTHIC":
+				cancel event
+				send "&cYou can't put this into a grindstone!" to player
+				close player's inventory
+
+	if type of player's current inventory is shulker box inventory:
+		if lore of clicked slot contains "&d&lMYTHIC":
+			cancel event
+			send "&cYou can't put this into a shulker box!" to player
+            
+		if click type is number key:
+			if lore of slot hotbar button of player's inventory contains "&d&lMYTHIC":
+				cancel event
+				send "&cYou can't put this into a shulker box!" to player
+				close player's inventory
